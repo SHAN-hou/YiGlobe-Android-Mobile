@@ -151,16 +151,17 @@
   }
 
   // === Toggle ===
-  closeBtn.addEventListener('click', function(){
+  function doCloseDetail(){
     panel.classList.add('collapsed');
     setTimeout(function(){
       panel.style.display='none';
-      // 重置拖拽遗留的内联定位, 下次打开恢复CSS默认位置
       panel.style.left=''; panel.style.top=''; panel.style.right=''; panel.style.bottom='';
       panel.classList.remove('on','collapsed');
       toggle.style.display='flex';
     },200);
-  });
+  }
+  closeBtn.addEventListener('pointerdown', function(e){ e.stopPropagation(); e.preventDefault(); doCloseDetail(); });
+  closeBtn.addEventListener('click', function(e){ e.stopPropagation(); });
   toggle.addEventListener('click', function(){
     toggle.style.display='none';
     panel.style.display='';

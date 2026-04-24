@@ -2150,17 +2150,19 @@ console.log('卦象分布:', nodes.map(n=>`${n.num} ${n.name} k=${n.k} ${n.onAxi
   // === 折叠/展开逻辑 ===
   const imgToggle = document.getElementById('hexImgToggle');
   let imgPanelOpen = false;
-  close.addEventListener('click', () => {
+  const doCloseImg = () => {
     panel.classList.add('collapsed');
     setTimeout(()=>{
       panel.style.display='none';
-      // 重置拖拽遗留的内联定位, 下次打开恢复CSS默认位置
       panel.style.left=''; panel.style.top=''; panel.style.right=''; panel.style.bottom='';
       panel.classList.remove('on','collapsed');
       imgToggle.style.display='flex';
       imgPanelOpen=false;
     },200);
-  });
+  };
+  // pointerdown优先触发, 任何拖拽/捕获状态下点X都可关闭
+  close.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); doCloseImg(); });
+  close.addEventListener('click', e => { e.stopPropagation(); });
   imgToggle.addEventListener('click', () => {
     imgToggle.style.display='none';
     panel.style.display='';
