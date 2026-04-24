@@ -24,10 +24,25 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: Generate release keystore
+      run: |
+        keytool -genkeypair -v \
+          -keystore release.keystore \
+          -storepass yiglobe \
+          -keypass yiglobe \
+          -alias yiglobe \
+          -keyalg RSA -keysize 2048 -validity 36500 \
+          -dname "CN=YiGlobe, OU=App, O=YiGlobe, L=Beijing, ST=Beijing, C=CN"
+
     - name: Build Debug APK
       run: ./gradlew assembleDebug
 
-    - name: Build Release APK
+    - name: Build Release APK (signed)
+      env:
+        KEYSTORE_PATH: ${{ github.workspace }}/release.keystore
+        KEYSTORE_PASSWORD: yiglobe
+        KEY_ALIAS: yiglobe
+        KEY_PASSWORD: yiglobe
       run: ./gradlew assembleRelease
 
     - name: Upload Debug APK
@@ -36,8 +51,8 @@ jobs:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
 
-    - name: Upload Release APK
+    - name: Upload Release APK (signed)
       uses: actions/upload-artifact@v4
       with:
-        name: app-release-unsigned
-        path: app/build/outputs/apk/release/app-release-unsigned.apk
+        name: app-release-signed
+        path: app/build/outputs/apk/release/app-release.apk
