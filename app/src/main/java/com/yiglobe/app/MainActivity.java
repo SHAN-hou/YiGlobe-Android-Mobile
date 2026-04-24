@@ -66,25 +66,14 @@ public class MainActivity extends Activity {
         // 允许混合内容 (本地 + 可能的CDN回退)
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
-        // 使用 WebViewAssetLoader 通过 https://appassets.androidplatform.net/ 提供 assets
-        // 避免 file:// scheme 下 ES Modules / CORS 限制导致 WebGL 无法加载
-        final WebViewAssetLoader assetLoader = new WebViewAssetLoader.Builder()
-            .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
-            .build();
-
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                return assetLoader.shouldInterceptRequest(request.getUrl());
-            }
-        });
+        webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
 
         // 背景透明, 与HTML背景色一致
         webView.setBackgroundColor(Color.parseColor("#05060a"));
 
-        // 通过 HTTPS 虚拟域名加载(支持 ES Modules)
-        webView.loadUrl("https://appassets.androidplatform.net/assets/index_offline.html");
+        // 使用 file:// 加载(V27 验证可用模式)
+        webView.loadUrl("file:///android_asset/index_offline.html");
     }
 
     @Override
