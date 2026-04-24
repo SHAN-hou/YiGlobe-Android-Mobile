@@ -304,16 +304,14 @@
 })();
 </script>
 
-<script>window.esmsInitOptions={shimMode:true};</script>
-<script src="lib/es-module-shims.js"></script>
-<script type="importmap-shim">
+<script type="importmap">
 {"imports":{
   "three":"lib/three/build/three.module.js",
   "three/addons/":"lib/three/examples/jsm/"
 }}
 </script>
 
-<script type="module-shim">
+<script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
